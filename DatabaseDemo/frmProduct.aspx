@@ -35,8 +35,11 @@
                         <div class="col-sm-2">
                              <asp:Label ID="lblRate" Text="Rate" runat="server"></asp:Label>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                               <asp:Label ID="lblCategory" Text="Category" runat="server"></asp:Label>
+                        </div>
+                        <div class="col-sm-2">
+                              <asp:Label ID="lblAction" Text="Action" runat="server"></asp:Label>
                         </div>
                     </div>
                 </HeaderTemplate>
@@ -51,8 +54,11 @@
                         <div class="col-sm-2">
                             <%# Eval("Rate") %>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <%# Eval("Category") %>
+                        </div>
+                        <div class="col-sm-2">
+                            <asp:LinkButton ID="lnkbtnSelect" runat="server" Text="Select" CssClass="text-dark" CommandName="Select"></asp:LinkButton>
                         </div>
                     </div>
                 </ItemTemplate>

@@ -11,7 +11,7 @@ namespace DatabaseDemo
 {
     public partial class frmProduct : System.Web.UI.Page
     {
-        string connectionstring = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\USERS\\INSPI\\DOWNLOADS\\DATABASEDEMO\\DATABASEDEMO\\DATABASEDEMO\\APP_DATA\\MYCOMPANY.MDF";
+        string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=D:\\C#\\DatabaseDemo\\DatabaseDemo\\App_Data\\Mycompany.mdf;Integrated Security=True";
         protected void Page_Load(object sender, EventArgs e)
         {
             if(!IsPostBack)
@@ -22,8 +22,8 @@ namespace DatabaseDemo
         }
         private void BindCategory()
         {
-            SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString= connectionstring;
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            //sqlConnection.ConnectionString= connectionstring;
             SqlCommand sqlCommand = new SqlCommand("spGetCategory", sqlConnection);
             sqlCommand.Parameters.Add("@flag",SqlDbType.Int).Value = 1;
             sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -39,8 +39,8 @@ namespace DatabaseDemo
         }
         private void BindDataList(int flag,int categoryId=0)
         {
-            SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = connectionstring;
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            //sqlConnection.ConnectionString = connectionString;
             SqlCommand sqlCommand = new SqlCommand("spGetProduct", sqlConnection);
             sqlCommand.Parameters.Add("@flag", SqlDbType.Int).Value = flag;
             sqlCommand.Parameters.Add("@CategoryId", SqlDbType.Int).Value = categoryId;
