@@ -23,7 +23,8 @@
         </div>
         <hr />
         <div class ="mt-2">
-            <asp:DataList ID="dlProduct" runat="server" AlternatingItemStyle-CssClass="bg-light" RepeatDirection="Horizontal" DataKeyField="ProductId" RepeatLayout="Flow">
+            <asp:DataList ID="dlProduct" runat="server" AlternatingItemStyle-CssClass="bg-light"
+                RepeatDirection="Horizontal" DataKeyField="ProductId" OnSelectedIndexChanged="dlProduct_SelectedIndexChanged" RepeatLayout="Flow">
                 <HeaderTemplate>
                     <div class="row border fs-4 border-1 rounded-1 bg-secondary text-light">
                         <div class="col-sm-3">

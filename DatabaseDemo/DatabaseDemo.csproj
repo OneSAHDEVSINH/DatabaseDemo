@@ -89,6 +89,7 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="frmCategory.aspx" />
     <Content Include="frmProduct.aspx" />
+    <Content Include="frmProductView.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -116,6 +117,13 @@
     </Compile>
     <Compile Include="frmProduct.aspx.designer.cs">
       <DependentUpon>frmProduct.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="frmProductView.aspx.cs">
+      <DependentUpon>frmProductView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="frmProductView.aspx.designer.cs">
+      <DependentUpon>frmProductView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -67,7 +67,12 @@ namespace DatabaseDemo
             {
                 BindDataList(2, categoryId);
             }
-
+        }
+        protected void dlProduct_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int value = Convert.ToInt32(dlProduct.SelectedValue);
+            Session["ProductId"] = value;
+            Response.Redirect("frmProductView.aspx");
         }
     }
 }
