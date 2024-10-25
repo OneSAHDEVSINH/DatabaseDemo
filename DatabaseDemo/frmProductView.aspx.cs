@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 namespace DatabaseDemo
 {
@@ -108,10 +109,26 @@ namespace DatabaseDemo
                 BindFormView(productId);
             }
         }
-
+        private void DeleteProduct (int productId)
+        {
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            //sqlConnection.ConnectionString = connectionString;
+            SqlCommand sqlCommand = new SqlCommand("spSetProduct", sqlConnection);
+            sqlCommand.Parameters.Add("@flag", SqlDbType.Int).Value = 3;
+            sqlCommand.Parameters.Add("@ProductId", SqlDbType.Int).Value = productId;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlConnection.Open();
+            sqlCommand.ExecuteNonQuery();
+            sqlCommand.Dispose();
+            sqlConnection.Close();
+            sqlCommand.Dispose();
+        }
         protected void fvProduct_ItemDeleting(object sender, FormViewDeleteEventArgs e)
         {
-
+            int productId = Convert.ToInt32(fvProduct.DataKey.Value);
+            DeleteProduct(productId);
+            fvProduct.ChangeMode(FormViewMode.ReadOnly);
+            Response.Redirect("frmProduct.aspx");
         }
     }
 }
