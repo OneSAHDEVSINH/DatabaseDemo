@@ -41,11 +41,14 @@
                                 <div class="col-sm-2">
                                     <asp:Label runat="server" ID="lblName" Text="Name" AssociatedControlID="txtName" CssClass="form-label" />
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-5">
                                     <asp:TextBox runat="server" ID="txtName" Text='<%# Bind("Name") %>' CssClass="form-control" />
                                 </div>
+                                <div class="col-sm-3 mt-1">
+                                    <asp:RequiredFieldValidator ID="rfvName" runat="server" ControlToValidate="txtName" Text="Product name Required" CssClass="text-danger fw-bold" ValidationGroup="Update" />
+                                </div>
                             </div>
-                            <div class="rowm-1">
+                            <div class="row m-1">
                                 <div class="col-sm-2">
                                     <asp:Label runat="server" ID="lblQty" Text="Qty" AssociatedControlID="txtQty" CssClass="form-label" />
                                 </div>
@@ -69,7 +72,7 @@
                             </div>
                             <div class="row m-1">
                                 <div class="col-sm-2">
-                                    <asp:Button ID="btnUpdate" runat="server" Text="Update" CommandName="Update" CssClass="btn btn-outline-success" />
+                                    <asp:Button ID="btnUpdate" runat="server" Text="Update" CommandName="Update" ValidationGroup="Update" CssClass="btn btn-outline-success" />
                                 </div>
                                 <div class="col-sm-2">
                                     <asp:Button ID="btnCancel" runat="server" Text="Cancel" CommandName="Cancel" CssClass="btn btn-outline-success" />

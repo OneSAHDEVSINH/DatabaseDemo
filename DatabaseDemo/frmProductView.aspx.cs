@@ -73,10 +73,40 @@ namespace DatabaseDemo
                 BindCategory(ddlCategory, categoryId);
             }
         }
-
+        private void UpdateProduct(int productId, string name, int qty, double rate, int categoryId, bool isActive)
+        {
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            //sqlConnection.ConnectionString = connectionString;
+            SqlCommand sqlCommand = new SqlCommand("spSetProduct", sqlConnection);
+            sqlCommand.Parameters.Add("@flag", SqlDbType.Int).Value = 1;
+            sqlCommand.Parameters.Add("@ProductId", SqlDbType.Int).Value = productId;
+            sqlCommand.Parameters.Add("@Name", SqlDbType.VarChar,50).Value = name;
+            sqlCommand.Parameters.Add("@Qty", SqlDbType.Int).Value = qty;
+            sqlCommand.Parameters.Add("@Rate", SqlDbType.Float).Value = rate;
+            sqlCommand.Parameters.Add("@CategoryId", SqlDbType.Int).Value = categoryId;
+            sqlCommand.Parameters.Add("@IsActive", SqlDbType.Bit).Value = isActive;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlConnection.Open();
+            sqlCommand.ExecuteNonQuery();
+            sqlCommand.Dispose();
+            sqlConnection.Close();
+            sqlCommand.Dispose();
+        }
         protected void fvProduct_ItemUpdating(object sender, FormViewUpdateEventArgs e)
         {
-
+            if (Page.IsValid)
+            {
+                int productId = Convert.ToInt32(fvProduct.DataKey.Value);
+                string name = Convert.ToString(e.NewValues["Name"]);
+                int qty = Convert.ToInt32(e.NewValues["Qty"]);
+                Double rate = Convert.ToDouble(e.NewValues["Rate"]);
+                DropDownList ddlCategory = (DropDownList)fvProduct.FindControl("ddlCategory");
+                int categoryId = Convert.ToInt32(ddlCategory.SelectedValue);
+                CheckBox chkIsActive = (CheckBox)fvProduct.FindControl("chkIsActive");
+                UpdateProduct(productId, name, qty, rate, categoryId, true);
+                fvProduct.ChangeMode(FormViewMode.ReadOnly);
+                BindFormView(productId);
+            }
         }
 
         protected void fvProduct_ItemDeleting(object sender, FormViewDeleteEventArgs e)
