@@ -57,9 +57,11 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <asp:Label runat="server" ID="lblRate" Text="Rate" AssociatedControlID="txtRate" CssClass="form-label" />
+                                    <asp:CompareValidator ID="cvQty" runat="server" ControlToValidate="txtQty" Operator="GreaterThanEqual" Type="Integer" ValueToCompare="1" ErrorMessage="Qty must be at least 1." CssClass="text-danger fw-bold"></asp:CompareValidator>
                                 </div>
                                 <div class="col-sm-3">
                                     <asp:TextBox runat="server" ID="txtRate" Text='<%# Bind("Rate") %>' CssClass="form-control" />
+                                    <asp:CompareValidator ID="cvRate" runat="server" ControlToValidate="txtRate" Operator="GreaterThanEqual" Type="Double" ValueToCompare="1" ErrorMessage="Rate must be at least 1."></asp:CompareValidator>
                                 </div>
                             </div>
                             <div class="row m-1">
