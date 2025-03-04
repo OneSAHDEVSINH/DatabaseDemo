@@ -1,0 +1,298 @@
+Here’s how you can create a simple CRUD (Create, Read, Update, Delete) operation program in C# Console App (.NET Framework) using Entity Framework in Visual Studio.
+
+
+---
+
+Step 1: Create a Console App (.NET Framework) in Visual Studio
+
+1. Open Visual Studio.
+
+
+2. Click on File → New → Project.
+
+
+3. Select Console App (.NET Framework).
+
+
+4. Name your project (e.g., CrudApp).
+
+
+5. Click Create.
+
+
+
+
+---
+
+Step 2: Install Entity Framework
+
+1. Open Package Manager Console (Tools → NuGet Package Manager → Package Manager Console).
+
+
+2. Run the following command to install Entity Framework:
+
+Install-Package EntityFramework
+
+
+
+
+---
+
+Step 3: Create a Database Model using Code First Approach
+
+1. Inside Solution Explorer, right-click on the project and add a new folder Models.
+
+
+2. Inside the Models folder, create a new C# class Student.cs:
+
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace CrudApp.Models
+{
+    public class Student
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+    }
+}
+
+
+
+
+---
+
+Step 4: Create the Database Context
+
+1. Inside the Models folder, create another class AppDbContext.cs:
+
+using System;
+using System.Data.Entity;
+
+namespace CrudApp.Models
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext() : base("name=StudentDB")
+        {
+        }
+
+        public DbSet<Student> Students { get; set; }
+    }
+}
+
+
+
+
+---
+
+Step 5: Configure the Database Connection
+
+1. Open App.config and add the following inside the <configuration> section:
+
+<configuration>
+  <connectionStrings>
+    <add name="StudentDB" 
+         connectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=StudentDB;Integrated Security=True" 
+         providerName="System.Data.SqlClient"/>
+  </connectionStrings>
+</configuration>
+
+
+
+
+---
+
+Step 6: Enable Migrations and Create Database
+
+1. Open Package Manager Console and run:
+
+Enable-Migrations
+
+
+2. Then, create an initial migration:
+
+Add-Migration InitialCreate
+
+
+3. Apply the migration to create the database:
+
+Update-Database
+
+
+
+
+---
+
+Step 7: Implement CRUD Operations
+
+1. Inside Program.cs, write the following code:
+
+using System;
+using System.Linq;
+using CrudApp.Models;
+
+namespace CrudApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.WriteLine("\n--- Student Management System ---");
+                Console.WriteLine("1. Add Student");
+                Console.WriteLine("2. View Students");
+                Console.WriteLine("3. Update Student");
+                Console.WriteLine("4. Delete Student");
+                Console.WriteLine("5. Exit");
+                Console.Write("Enter your choice: ");
+                int choice = Convert.ToInt32(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        AddStudent();
+                        break;
+                    case 2:
+                        ViewStudents();
+                        break;
+                    case 3:
+                        UpdateStudent();
+                        break;
+                    case 4:
+                        DeleteStudent();
+                        break;
+                    case 5:
+                        return;
+                    default:
+                        Console.WriteLine("Invalid choice! Try again.");
+                        break;
+                }
+            }
+        }
+
+        static void AddStudent()
+        {
+            using (var db = new AppDbContext())
+            {
+                Console.Write("Enter Student Name: ");
+                string name = Console.ReadLine();
+                Console.Write("Enter Student Age: ");
+                int age = Convert.ToInt32(Console.ReadLine());
+
+                var student = new Student { Name = name, Age = age };
+                db.Students.Add(student);
+                db.SaveChanges();
+
+                Console.WriteLine("Student added successfully!");
+            }
+        }
+
+        static void ViewStudents()
+        {
+            using (var db = new AppDbContext())
+            {
+                var students = db.Students.ToList();
+                Console.WriteLine("\n--- Student List ---");
+                foreach (var student in students)
+                {
+                    Console.WriteLine($"ID: {student.Id}, Name: {student.Name}, Age: {student.Age}");
+                }
+            }
+        }
+
+        static void UpdateStudent()
+        {
+            using (var db = new AppDbContext())
+            {
+                Console.Write("Enter Student ID to update: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+                var student = db.Students.Find(id);
+
+                if (student != null)
+                {
+                    Console.Write("Enter New Name: ");
+                    student.Name = Console.ReadLine();
+                    Console.Write("Enter New Age: ");
+                    student.Age = Convert.ToInt32(Console.ReadLine());
+
+                    db.SaveChanges();
+                    Console.WriteLine("Student updated successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Student not found!");
+                }
+            }
+        }
+
+        static void DeleteStudent()
+        {
+            using (var db = new AppDbContext())
+            {
+                Console.Write("Enter Student ID to delete: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+                var student = db.Students.Find(id);
+
+                if (student != null)
+                {
+                    db.Students.Remove(student);
+                    db.SaveChanges();
+                    Console.WriteLine("Student deleted successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Student not found!");
+                }
+            }
+        }
+    }
+}
+
+
+
+
+---
+
+Step 8: Run the Application
+
+1. Press F5 or Ctrl + F5 to run the program.
+
+
+2. Test each CRUD operation by selecting the menu options.
+
+
+
+
+---
+
+Summary of the CRUD Operations
+
+Create → Add new students to the database.
+
+Read → Display all students.
+
+Update → Modify student details.
+
+Delete → Remove a student from the database.
+
+
+
+---
+
+Next Steps
+
+Add data validation (e.g., check if input is empty or invalid).
+
+Improve error handling using try-catch.
+
+Implement logging for better debugging.
+
+
+Let me know if you need any modifications!
+
