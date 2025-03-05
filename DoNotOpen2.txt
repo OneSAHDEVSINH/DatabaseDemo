@@ -1,0 +1,235 @@
+Since your application is now working with the Students controller, let's integrate AJAX using jQuery to perform CRUD operations asynchronously. This will improve user experience by avoiding full-page reloads.
+
+
+---
+
+Steps to Use AJAX in Your Application
+
+1. Add jQuery to Your Project
+
+If jQuery is not already included, add it in Views/Shared/_Layout.cshtml inside the <head> section:
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+---
+
+2. Modify the Index View to Load Data via AJAX
+
+Update Views/Students/Index.cshtml
+
+Replace the existing table with this:
+
+@{
+    ViewBag.Title = "Student List";
+}
+
+<h2>Student List</h2>
+
+<!-- Button to Show Add Student Form -->
+<button onclick="showAddForm()">Add New Student</button>
+
+<!-- Student Form (Hidden by Default) -->
+<div id="studentForm" style="display: none;">
+    <input type="hidden" id="studentId">
+    <label>Name:</label> <input type="text" id="studentName"><br>
+    <label>Age:</label> <input type="number" id="studentAge"><br>
+    <button onclick="saveStudent()">Save</button>
+</div>
+
+<!-- Student Table -->
+<table class="table" id="studentsTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- jQuery AJAX Script -->
+<script>
+    $(document).ready(function () {
+        loadStudents();
+    });
+
+    // Load Students via AJAX
+    function loadStudents() {
+        $.ajax({
+            url: '/Students/GetStudents',
+            type: 'GET',
+            success: function (data) {
+                var tbody = $('#studentsTable tbody');
+                tbody.empty();
+                $.each(data, function (i, student) {
+                    tbody.append(`
+                        <tr>
+                            <td>${student.Name}</td>
+                            <td>${student.Age}</td>
+                            <td>
+                                <button onclick="editStudent(${student.Id}, '${student.Name}', ${student.Age})">Edit</button>
+                                <button onclick="deleteStudent(${student.Id})">Delete</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+    }
+
+    // Show Add Form
+    function showAddForm() {
+        $('#studentId').val('');
+        $('#studentName').val('');
+        $('#studentAge').val('');
+        $('#studentForm').show();
+    }
+
+    // Save Student (Add or Update)
+    function saveStudent() {
+        var student = {
+            Id: $('#studentId').val(),
+            Name: $('#studentName').val(),
+            Age: $('#studentAge').val()
+        };
+
+        $.ajax({
+            url: student.Id ? '/Students/UpdateStudent' : '/Students/CreateStudent',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(student),
+            success: function () {
+                loadStudents();
+                $('#studentForm').hide();
+            }
+        });
+    }
+
+    // Edit Student
+    function editStudent(id, name, age) {
+        $('#studentId').val(id);
+        $('#studentName').val(name);
+        $('#studentAge').val(age);
+        $('#studentForm').show();
+    }
+
+    // Delete Student
+    function deleteStudent(id) {
+        if (confirm("Are you sure?")) {
+            $.ajax({
+                url: '/Students/DeleteStudent/' + id,
+                type: 'DELETE',
+                success: function () {
+                    loadStudents();
+                }
+            });
+        }
+    }
+</script>
+
+
+---
+
+3. Modify StudentsController.cs to Handle AJAX Requests
+
+Add Methods to Handle AJAX in StudentsController.cs
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using StudentCRUD.Models;
+
+namespace StudentCRUD.Controllers
+{
+    public class StudentsController : Controller
+    {
+        private StudentContext db = new StudentContext();
+
+        // GET: Students
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: Students/GetStudents
+        public JsonResult GetStudents()
+        {
+            var students = db.Students.ToList();
+            return Json(students, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: Students/CreateStudent
+        [HttpPost]
+        public JsonResult CreateStudent(Student student)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Students.Add(student);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+
+        // POST: Students/UpdateStudent
+        [HttpPost]
+        public JsonResult UpdateStudent(Student student)
+        {
+            var existingStudent = db.Students.Find(student.Id);
+            if (existingStudent != null)
+            {
+                existingStudent.Name = student.Name;
+                existingStudent.Age = student.Age;
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+
+        // DELETE: Students/DeleteStudent/{id}
+        [HttpDelete]
+        public JsonResult DeleteStudent(int id)
+        {
+            var student = db.Students.Find(id);
+            if (student != null)
+            {
+                db.Students.Remove(student);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+    }
+}
+
+
+---
+
+4. Run the Application
+
+1. Start the application (F5).
+
+
+2. Navigate to http://localhost:[port]/Students.
+
+
+3. Try Adding, Editing, and Deleting students using AJAX.
+
+
+
+
+---
+
+How It Works
+
+✅ loadStudents() → Fetches students from the database via AJAX.
+✅ saveStudent() → Adds or updates a student using AJAX.
+✅ editStudent() → Fills the form for editing.
+✅ deleteStudent() → Deletes a student using AJAX.
+
+Now your ASP.NET Web Application performs CRUD operations asynchronously using AJAX and jQuery!
+
+Let me know if you need any modifications or explanations!
+
